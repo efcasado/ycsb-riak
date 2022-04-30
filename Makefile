@@ -1,4 +1,4 @@
-.PHONY: all build up down load run
+.PHONY: all build up down load run cluster-status
 
 DOCKER_NETWORK=ycsb-riak_default
 
@@ -28,3 +28,6 @@ load:
 
 run:
 	docker run --rm -it --network=$(DOCKER_NETWORK) ycsb run riak -P workloads/workloada -p riak.hosts=ycsb-riak-riak-1,ycsb-riak-riak-2,ycsb-riak-riak-3 -p riak.debug=true
+
+cluster-status:
+	docker-compose exec --index=1 -- riak riak-admin cluster status
