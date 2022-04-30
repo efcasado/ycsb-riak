@@ -22,22 +22,15 @@ please, check `YCSB`'s Riak client
 [documentation](https://github.com/brianfrankcooper/YCSB/tree/master/riak).
 
 
+## Requirements
+
+- [GNU Make](https://www.gnu.org/software/make/)
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
+
+
 ## Get Started
 
-```
-make build
-```
-
-```
-docker run --rm -it ycsb load basic -P workloads/workloada
-docker run --rm -it ycsb run basic -P workloads/workloada
-```
-
-```
-make up
-```
-
-```
-docker run --rm -it ycsb load riak -P workloads/workloada -p riak.hosts=host.docker.internal -p riak.debug=true
-docker run --rm -it ycsb run riak -P workloads/workloada -p riak.hosts=host.docker.internal -p riak.debug=true
-```
+Running `make all` (or just `make`) will package `YCSB` as a (local) Docker
+image, will spin up a 3-node Riak cluster and will run a `YCSB` test-run
+against the latter.
