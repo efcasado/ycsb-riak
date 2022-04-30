@@ -3,5 +3,8 @@ services:
   riak:
     image: basho/riak-kv:2.1.4
     ports:
-      - 8087:8087
-      - 8098:8098
+      - 8087
+      - 8098
+    deploy:
+      mode: replicated
+      replicas: 3
