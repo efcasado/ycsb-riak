@@ -38,6 +38,6 @@ make up
 ```
 
 ```
-docker run --rm -it ycsb load riak -P workloads/workloada -p riak.hosts=host.docker.internal
-docker run --rm -it ycsb run riak -P workloads/workloada -p riak.hosts=host.docker.internal
+docker run --rm -it ycsb load riak -P workloads/workloada -p riak.hosts=host.docker.internal -p riak.debug=true
+docker run --rm -it ycsb run riak -P workloads/workloada -p riak.hosts=host.docker.internal -p riak.debug=true
 ```
