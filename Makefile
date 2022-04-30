@@ -1,4 +1,4 @@
-.PHONY: all build up down load run cluster-info
+.PHONY: all build up down load run cluster-info show-riak-config
 
 DOCKER_NETWORK=ycsb-riak_default
 
@@ -33,3 +33,6 @@ cluster-info:
 	docker-compose exec --index=1 -- riak riak-admin cluster partitions
 	docker-compose exec --index=2 -- riak riak-admin cluster partitions
 	docker-compose exec --index=3 -- riak riak-admin cluster partitions
+
+show-riak-config:
+	docker-compose exec --index=1 -- riak riak config effective
