@@ -5,6 +5,8 @@ services:
     ports:
       - 8087
       - 8098
+    volumes:
+      - ./etc/riak/user.conf:/etc/riak/user.conf
     deploy:
       mode: replicated
       replicas: 3
