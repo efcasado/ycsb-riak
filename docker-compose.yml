@@ -1,0 +1,7 @@
+version: '3.7'
+services:
+  riak:
+    image: basho/riak-kv:2.1.4
+    ports:
+      - 8087:8087
+      - 8098:8098
