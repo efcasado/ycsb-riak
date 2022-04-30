@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   riak:
-    image: basho/riak-kv:2.1.4
+    image: basho/riak-kv:ubuntu-2.2.3
     ports:
       - 8087
       - 8098
