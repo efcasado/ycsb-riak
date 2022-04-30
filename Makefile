@@ -1,5 +1,7 @@
 .PHONY: all build up down load run
 
+DOCKER_NETWORK=ycsb-riak_default
+
 all: | build up load run
 
 build:
@@ -21,7 +23,7 @@ down:
 	-docker-compose down
 
 load:
-	docker run --rm -it ycsb load riak -P workloads/workloada -p riak.hosts=host.docker.internal -p riak.debug=true
+	docker run --rm -it --network=$(DOCKER_NETWORK) ycsb load riak -P workloads/workloada -p riak.hosts=ycsb-riak-riak-1,ycsb-riak-riak-2,ycsb-riak-riak-3 -p riak.debug=true
 
 run:
-	docker run --rm -it ycsb run riak -P workloads/workloada -p riak.hosts=host.docker.internal -p riak.debug=true
+	docker run --rm -it --network=$(DOCKER_NETWORK) ycsb run riak -P workloads/workloada -p riak.hosts=ycsb-riak-riak-1,ycsb-riak-riak-2,ycsb-riak-riak-3 -p riak.debug=true
