@@ -1,9 +1,10 @@
 .PHONY: all build up down load run cluster-info show-riak-config
 
 DOCKER_NETWORK=ycsb-riak_default
-YCSB_RECORD_COUNT=1000
-YCSB_THREADS=2
-YCSB_TARGET=200
+YCSB_RECORD_COUNT=10000
+YCSB_OPERATION_COUNT=10000
+YCSB_THREADS=4
+YCSB_TARGET=500
 
 all: | build up cluster-info load run
 
@@ -29,7 +30,7 @@ load:
 	docker run --rm -it --network=$(DOCKER_NETWORK) ycsb load riak -P workloads/workloada -p threads=$(YCSB_THREADS) -p target=$(YCSB_TARGET) -p recordcount=$(YCSB_RECORD_COUNT) -p riak.hosts=ycsb-riak-riak-1,ycsb-riak-riak-2,ycsb-riak-riak-3 -p riak.debug=true
 
 run:
-	docker run --rm -it --network=$(DOCKER_NETWORK) ycsb run riak -P workloads/workloada -p threads=$(YCSB_THREADS) -p target=$(YCSB_TARGET) -p recordcount=$(YCSB_RECORD_COUNT) -p riak.hosts=ycsb-riak-riak-1,ycsb-riak-riak-2,ycsb-riak-riak-3 -p riak.debug=true
+	docker run --rm -it --network=$(DOCKER_NETWORK) ycsb run riak -P workloads/workloada -p threads=$(YCSB_THREADS) -p target=$(YCSB_TARGET) -p recordcount=$(YCSB_RECORD_COUNT) -p operationcount=$(YCSB_OPERATION_COUNT) -p riak.hosts=ycsb-riak-riak-1,ycsb-riak-riak-2,ycsb-riak-riak-3 -p riak.debug=true
 
 cluster-info:
 	docker-compose exec --index=1 -- riak riak-admin cluster status
