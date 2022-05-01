@@ -34,3 +34,22 @@ please, check `YCSB`'s Riak client
 Running `make all` (or just `make`) will package `YCSB` as a (local) Docker
 image, will spin up a 3-node Riak cluster and will run a `YCSB` test-run
 against the latter.
+
+You can change the settings of your Riak cluster by adjusting the
+[user.conf](https://github.com/efcasado/ycsb-riak/blob/main/etc/riak/user.conf)
+file included in this repository. For more information about how to configure
+a Riak cluster, please, check Riak's
+[official documentation](https://docs.riak.com/riak/kv/latest/configuring/basic/index.html).
+
+You may also be interested in adjusting the load-generation parameters of
+`YCSB`. You can do this by setting the `YCSB_{THREADS, TARGET, RECORD_COUNT, OPERATION_COUNT}`
+variables, which default to `1`, `100`, `1000` and `1000`, respectively.
+
+```
+YCSB_THREADS=4 YCSB_TARGET=500 YCSB_RECORD_COUNT=10000 YCSB_OPERATION_COUNT=10000 make load
+YCSB_THREADS=4 YCSB_TARGET=500 YCSB_RECORD_COUNT=10000 YCSB_OPERATION_COUNT=10000 make run
+```
+
+The above example configures `YCSB` to use `4` threads to try to achieve a
+throughput of `500` requests per second while loading `10_000` entries in the
+database and executing `10_000` operations against the loaded data.
