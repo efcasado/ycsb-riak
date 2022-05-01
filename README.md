@@ -53,3 +53,7 @@ YCSB_THREADS=4 YCSB_TARGET=500 YCSB_RECORD_COUNT=10000 YCSB_OPERATION_COUNT=1000
 The above example configures `YCSB` to use `4` threads to try to achieve a
 throughput of `500` requests per second while loading `10_000` entries in the
 database and executing `10_000` operations against the loaded data.
+
+It is also possible to configure how many CPUs will be allocated to `YCSB` and
+each of the `Riak` containers. You can do this by adjusting the `DOCKER_YCSB_CPUS`
+and `DOCKER_RIAK_CPUS` variables, which default to `1`.

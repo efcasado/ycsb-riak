@@ -10,3 +10,6 @@ services:
     deploy:
       mode: replicated
       replicas: 3
+      resources:
+        limits:
+          cpus: ${DOCKER_RIAK_CPUS:-1}
