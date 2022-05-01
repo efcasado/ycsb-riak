@@ -2,7 +2,7 @@
 
 Authored by Yahoo! Research in [2010](https://people.cs.pitt.edu/~chang/231/y13/papers/benchmarkcloud.pdf),
 [YCSB](https://github.com/brianfrankcooper/YCSB) is an extensible workload
-generator for benchmarking key-value stores.
+generator for benchmarking key-value data stores.
 
 A typical `YCSB` run consists of loading key-value pairs into the target data
 store, run a specific workload against the target data store, and reporting
