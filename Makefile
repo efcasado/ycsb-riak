@@ -1,10 +1,10 @@
 .PHONY: all build up down load run cluster-info show-riak-config
 
-DOCKER_NETWORK=ycsb-riak_default
-YCSB_RECORD_COUNT=1000
-YCSB_OPERATION_COUNT=1000
-YCSB_THREADS=1
-YCSB_TARGET=100
+DOCKER_NETWORK ?= ycsb-riak_default
+YCSB_RECORD_COUNT ?= 1000
+YCSB_OPERATION_COUNT ?= 1000
+YCSB_THREADS ?= 1
+YCSB_TARGET ?= 100
 
 all: | build up cluster-info load run
 
