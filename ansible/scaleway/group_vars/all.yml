@@ -1,0 +1,6 @@
+---
+ycsb_version: 0.17.0
+riak_ring_size: 64
+riak_storage_backend: leveldb
+riak_version: 2.9.10
+riak_version_minor: 2.9

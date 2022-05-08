@@ -1,0 +1,9 @@
+plugin: community.general.scaleway
+hostnames:
+  - private_ipv4
+regions:
+  - par1
+variables:
+  ansible_host: private_ip
+  ansible_ssh_host: public_ip.address
+  ansible_host_private_ip: private_ip

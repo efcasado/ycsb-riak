@@ -1,0 +1,115 @@
+---
+- name: Install and configure Riak
+  hosts: riak
+
+  tasks:
+    - name: Download Riak
+      get_url:
+        url: https://files.tiot.jp/riak/kv/{{ riak_version_minor }}/{{ riak_version }}/ubuntu/focal64/riak_{{ riak_version }}-1_amd64.deb
+        dest: /tmp/riak_{{ riak_version }}-1_amd64.deb
+
+    - name: Install Riak
+      apt:
+        deb: /tmp/riak_{{ riak_version }}-1_amd64.deb
+        state: present
+
+    - name: Configure node name
+      lineinfile:
+        path: /etc/riak/riak.conf
+        line: "nodename = riak@{{ ansible_host }}"
+        regexp: "^nodename ="
+      notify:
+        - Stop Riak
+        - Re-initialize Riak
+        - Start Riak
+
+    - name: Configure storage backend
+      lineinfile:
+        path: /etc/riak/riak.conf
+        line: "storage_backend = {{ riak_storage_backend }}"
+        regexp: "^storage_backend ="
+      notify:
+        - Stop Riak
+        - Re-initialize Riak
+        - Start Riak
+
+    - name: Configure ring size
+      lineinfile:
+        path: /etc/riak/riak.conf
+        line: "ring_size = {{ riak_ring_size }}"
+        regexp: "^ring_size ="
+      notify:
+        - Stop Riak
+        - Re-initialize Riak
+        - Start Riak
+
+    - name: Configure protobuf interface
+      lineinfile:
+        path: /etc/riak/riak.conf
+        line: "listener.protobuf.internal = {{ ansible_host }}:8087"
+        regexp: "^listener.protobuf.internal ="
+      notify:
+        - Stop Riak
+        - Re-initialize Riak
+        - Start Riak
+
+    - name: Configure HTTP interface
+      lineinfile:
+        path: /etc/riak/riak.conf
+        line: "listener.http.internal = {{ ansible_host }}:8098"
+        regexp: "^listener.http.internal ="
+      notify:
+        - Stop Riak
+        - Re-initialize Riak
+        - Start Riak
+
+    - name: Configure Erlang distribution port range (minimum)
+      lineinfile:
+        path: /etc/riak/riak.conf
+        line: "erlang.distribution.port_range.minimum = 6000"
+        regexp: "^erlang.distribution.port_range.minimum ="
+      notify:
+        - Stop Riak
+        - Re-initialize Riak
+        - Start Riak
+
+    - name: Configure Erlang distribution port range (maximum)
+      lineinfile:
+        path: /etc/riak/riak.conf
+        line: "erlang.distribution.port_range.maximum = 7023"
+        regexp: "^erlang.distribution.port_range.maximum ="
+      notify:
+        - Stop Riak
+        - Re-initialize Riak
+        - Start Riak
+
+    - name: Configure ulimit
+      lineinfile:
+        path: /etc/default/riak
+        line: "ulimit -n 200000"
+        regexp: "^ulimit -n"
+        create: yes
+      notify:
+        - Stop Riak
+        - Re-initialize Riak
+        - Start Riak
+
+    - name: Ensure Riak is running
+      ansible.builtin.service:
+        name: riak
+        state: started
+
+  handlers:
+    - name: Stop Riak
+      ansible.builtin.service:
+        name: riak
+        state: stopped
+
+    - name: Re-initialize Riak
+      shell: |
+        rm -rf /var/lib/riak/*
+
+    - name: Start Riak
+      ansible.builtin.service:
+        name: riak
+        state: started
