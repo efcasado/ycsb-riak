@@ -28,7 +28,7 @@ build:
 
 up: up$(TARGET_SUFFIX)
 up-local:
-	DOCKER_RIAK_CPUS=$(DOCKER_RIAK_CPUS) docker-compose up -d
+	DOCKER_RIAK_CPUS=$$(($(DOCKER_RIAK_CPUS) * 1000000000)) docker-compose up -d
 	docker-compose exec --index=1 -- riak riak-admin wait-for-service riak_kv
 	-docker-compose exec --index=1 -- riak riak-admin bucket-type create ycsb '{"props":{"allow_mult":"false"}}'
 	-docker-compose exec --index=1 -- riak riak-admin bucket-type activate ycsb
