@@ -1,0 +1,16 @@
+---
+- name: Configure Riak cluster
+  hosts: riak
+
+  tasks:
+    - name: Joins a Riak node to another node
+      shell: riak-admin cluster join riak@{{ groups['riak_1'][0] }}
+      when: ansible_host != groups['riak_1'][0]
+
+    - name: Joins a Riak node to another node
+      shell: riak-admin cluster plan
+      when: ansible_host != groups['riak_1'][0]
+
+    - name: Joins a Riak node to another node
+      shell: riak-admin cluster commit
+      when: ansible_host != groups['riak_1'][0]

@@ -1,0 +1,2 @@
+source ./terraform/.rc
+source ./ansible/.rc
