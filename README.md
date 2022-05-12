@@ -24,9 +24,9 @@ please, check `YCSB`'s Riak client
 
 ## Requirements
 
-- [GNU Make](https://www.gnu.org/software/make/)
-- [Docker](https://www.docker.com/)
-- [Docker Compose](https://docs.docker.com/compose/)
+- [GNU Make](https://www.gnu.org/software/make/) (3.81 or newer)
+- [Docker](https://www.docker.com/) (20.10.14 or newer)
+- [Docker Compose](https://docs.docker.com/compose/) (1.29.2 or newer)
 
 
 ## Get Started
