@@ -1,0 +1,22 @@
+---
+- name: Install and configure YCSB
+  hosts: ycsb
+
+  tasks:
+    - name: Install Java 8 JRE
+      apt:
+        name: openjdk-8-jre
+        update_cache: yes
+
+    - name: Install Python
+      apt:
+        name: python
+        update_cache: yes
+
+    - name: Download YCSB
+      shell: |
+        wget https://github.com/brianfrankcooper/YCSB/releases/download/{{ ycsb_version }}/ycsb-{{ ycsb_version }}.tar.gz -P /tmp/
+        mkdir -p /opt/ycsb
+        tar xfvz /tmp/ycsb-{{ ycsb_version }}.tar.gz --strip-components=1 -C /opt/ycsb/
+        cd /opt/ycsb
+        rm -rf /tmp/ycsb-{{ ycsb_version }}

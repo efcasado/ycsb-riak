@@ -9,7 +9,7 @@ services:
       - ./etc/riak/user.conf:/etc/riak/user.conf
     deploy:
       mode: replicated
-      replicas: 3
+      replicas: ${RIAK_INSTANCES:-3}
       resources:
         limits:
           cpus: ${DOCKER_RIAK_CPUS:-1}

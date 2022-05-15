@@ -1,0 +1,26 @@
+---
+- name: Configure Riak cluster
+  hosts: riak
+
+  tasks:
+    - name: Create bucket type
+      shell: riak-admin bucket-type create ycsb '{"props":{"search_index":"ycsb","allow_mult":"false"}}'
+      when: ansible_host == groups['riak1'][0]
+      ignore_errors: yes
+
+    - name: Activate bucket type
+      shell: riak-admin bucket-type activate ycsb
+      when: ansible_host == groups['riak1'][0]
+      ignore_errors: yes
+
+    - name: Join the cluster
+      shell: riak-admin cluster join riak@{{ groups['riak1'][0] }}
+      when: ansible_host != groups['riak1'][0]
+
+    - name: Plan the cluster changes
+      shell: riak-admin cluster plan
+      when: ansible_host != groups['riak1'][0]
+
+    - name: Commit the cluster changes
+      shell: riak-admin cluster commit
+      when: ansible_host != groups['riak1'][0]
