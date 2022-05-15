@@ -59,13 +59,13 @@ down-remote:
 
 load: load$(TARGET_SUFFIX)
 load-local:
-	YCSB_RIAK_HOSTS=$$(docker ps --format "{{.Names}}" | grep ycsb-riak_riak | xargs | tr ' ' ','); docker run --cpus=$(DOCKER_YCSB_CPUS) --rm -it --network=$(DOCKER_NETWORK) ycsb load riak -P workloads/workloada -threads $(YCSB_THREADS) -target $(YCSB_TARGET) -p recordcount=$(YCSB_RECORD_COUNT) -p riak.hosts=$${YCSB_RIAK_HOSTS} -p riak.debug=true
+	YCSB_RIAK_HOSTS=$$(docker ps --format "{{.Names}}" | grep ycsb-riak-riak | xargs | tr ' ' ','); docker run --cpus=$(DOCKER_YCSB_CPUS) --rm -it --network=$(DOCKER_NETWORK) ycsb load riak -P workloads/workloada -threads $(YCSB_THREADS) -target $(YCSB_TARGET) -p recordcount=$(YCSB_RECORD_COUNT) -p riak.hosts=$${YCSB_RIAK_HOSTS} -p riak.debug=true
 load-remote:
 	docker run --cpus=$(DOCKER_YCSB_CPUS) --rm -it --network=default ycsb load riak -P workloads/workloada -threads $(YCSB_THREADS) -target $(YCSB_TARGET) -p recordcount=$(YCSB_RECORD_COUNT) -p riak.hosts=$$(cd ansible; ansible-inventory --list -i scaleway/inventory.yml all | grep -v INFO | jq '._meta."hostvars" | .[] | .public_ipv4' | xargs | tr ' ' ',') -p riak.debug=true
 
 run: run$(TARGET_SUFFIX)
 run-local:
-	YCSB_RIAK_HOSTS=$$(docker ps --format "{{.Names}}" | grep ycsb-riak_riak | xargs | tr ' ' ','); docker run --cpus=$(DOCKER_YCSB_CPUS) --rm -it --network=$(DOCKER_NETWORK) ycsb run riak -P workloads/workloada -threads $(YCSB_THREADS) -target $(YCSB_TARGET) -p recordcount=$(YCSB_RECORD_COUNT) -p operationcount=$(YCSB_OPERATION_COUNT) -p riak.hosts=$(YCSB_RIAK_HOSTS) -p riak.debug=true
+	YCSB_RIAK_HOSTS=$$(docker ps --format "{{.Names}}" | grep ycsb-riak-riak | xargs | tr ' ' ','); docker run --cpus=$(DOCKER_YCSB_CPUS) --rm -it --network=$(DOCKER_NETWORK) ycsb run riak -P workloads/workloada -threads $(YCSB_THREADS) -target $(YCSB_TARGET) -p recordcount=$(YCSB_RECORD_COUNT) -p operationcount=$(YCSB_OPERATION_COUNT) -p riak.hosts=$(YCSB_RIAK_HOSTS) -p riak.debug=true
 run-remote:
 	$(eval YCSB_RIAK_HOSTS=$(shell cd ansible; ansible-inventory --list -i scaleway/inventory.yml all | jq '._meta."hostvars" | .[] | .public_ipv4' | xargs | tr ' ' ','))
 	docker run --cpus=$(DOCKER_YCSB_CPUS) --rm -it --network=default ycsb load riak -P workloads/workloada -threads $(YCSB_THREADS) -target $(YCSB_TARGET) -p recordcount=$(YCSB_RECORD_COUNT) -p operationcount=$(YCSB_OPERATION_COUNT) -p riak.hosts=$(YCSB_RIAK_HOSTS) -p riak.debug=true
