@@ -1,14 +1,17 @@
 ---
 - name: Install and configure YCSB
   hosts: ycsb
+  become: true
 
   tasks:
     - name: Install Java 8 JRE
+      become: true
       apt:
         name: openjdk-8-jre
         update_cache: yes
 
     - name: Install Python
+      become: true
       apt:
         name: python
         update_cache: yes

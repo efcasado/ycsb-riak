@@ -1,6 +1,7 @@
 ---
 - name: Configure Riak cluster
   hosts: riak
+  become: true
 
   tasks:
     - name: Create bucket type

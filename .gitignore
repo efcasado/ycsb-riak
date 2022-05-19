@@ -1,3 +1,9 @@
 *~
 *.terraform
 terraform/.ssh/
+terraform/scaleway/.ssh
+terraform/aws/.ssh
+ansible/.ansible
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.tfstate.lock.info

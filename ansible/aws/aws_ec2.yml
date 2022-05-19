@@ -1,0 +1,14 @@
+plugin: aws_ec2
+regions:
+  eu-north-1
+keyed_groups:
+  - key: 'tags.Group'
+    separator: ''
+  - key: 'tags.Name'
+    separator: ''
+hostnames:
+  - private-ip-address
+compose:
+  ansible_host: private_ip_address
+  ansible_ssh_host: public_ip_address
+  ansible_host_private_ip: private_ip_address
