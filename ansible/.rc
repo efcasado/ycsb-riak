@@ -1,41 +1,40 @@
 ## == Ansible ================================================================
-ANSIBLE_VERSION=2.10-awshelm3.5
 function ansible() {
-    DOCKER_IMAGE=cytopia/ansible:${ANSIBLE_VERSION}
-    DOCKER_RUN_OPTS="--rm -it -v ${HOME}/.ssh:/root/.ssh -v ${PWD}:${PWD} -w ${PWD} -e SCW_ACCESS_KEY -e SCW_SECRET_KEY -e SCW_TOKEN -e ANSIBLE_CONFIG -v ${HOME}/.ssh:/root/.ssh"
-    if [ -n "$ZSH_VERSION"]; then
-        op run --env-file .env -- docker run ${DOCKER_RUN_OPTS} ${DOCKER_IMAGE} ansible $@
+    DOCKER_IMAGE=ansible
+    DOCKER_RUN_OPTS="--rm -it -v ${HOME}/.ssh:/root/.ssh -v ${PWD}:${PWD} -w ${PWD} -e SCW_ACCESS_KEY -e SCW_SECRET_KEY -e SCW_TOKEN -e ANSIBLE_CONFIG -v ${HOME}/.ssh:/root/.ssh --entrypoint=ansible"
+    if [ -n "$ZSH_VERSION" ]; then
+        op run --env-file .env -- docker run ${=DOCKER_RUN_OPTS} ${=DOCKER_IMAGE} "$@"
     else
-        op run --env-file .env -- docker run ${=DOCKER_RUN_OPTS} ${=DOCKER_IMAGE} ansible $@
+        op run --env-file .env -- docker run ${DOCKER_RUN_OPTS} ${DOCKER_IMAGE} "$@"
     fi
 }
 
 function ansible-galaxy() {
-    DOCKER_IMAGE=cytopia/ansible:${ANSIBLE_VERSION}
-    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD} -e SCW_ACCESS_KEY -e SCW_SECRET_KEY -e SCW_TOKEN -e ANSIBLE_CONFIG -v ${HOME}/.ssh:/root/.ssh"
-    if [ -n "$ZSH_VERSION"]; then
-        op run --env-file .env -- docker run ${DOCKER_RUN_OPTS} ${DOCKER_IMAGE} ansible-galaxy $@
+    DOCKER_IMAGE=ansible
+    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD} -e SCW_ACCESS_KEY -e SCW_SECRET_KEY -e SCW_TOKEN -e ANSIBLE_CONFIG -v ${HOME}/.ssh:/root/.ssh --entrypoint=ansible-galaxy"
+    if [ -n "$ZSH_VERSION" ]; then
+        op run --env-file .env -- docker run ${=DOCKER_RUN_OPTS} ${=DOCKER_IMAGE} "$@"
     else
-        op run --env-file .env -- docker run ${=DOCKER_RUN_OPTS} ${=DOCKER_IMAGE} ansible-galaxy $@
+        op run --env-file .env -- docker run ${DOCKER_RUN_OPTS} ${DOCKER_IMAGE} "$@"
     fi
 }
 
 function ansible-inventory() {
-    DOCKER_IMAGE=cytopia/ansible:${ANSIBLE_VERSION}
-    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD} -e SCW_ACCESS_KEY -e SCW_SECRET_KEY -e SCW_TOKEN -e ANSIBLE_CONFIG -v ${HOME}/.ssh:/root/.ssh"
-    if [ -n "$ZSH_VERSION"]; then
-        op run --env-file .env -- docker run ${DOCKER_RUN_OPTS} ${DOCKER_IMAGE} ansible-inventory $@
+    DOCKER_IMAGE=ansible
+    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD} -e SCW_ACCESS_KEY -e SCW_SECRET_KEY -e SCW_TOKEN -e ANSIBLE_CONFIG -v ${HOME}/.ssh:/root/.ssh --entrypoint=ansible-inventory"
+    if [ -n "$ZSH_VERSION" ]; then
+        op run --env-file .env -- docker run ${=DOCKER_RUN_OPTS} ${=DOCKER_IMAGE} "$@"
     else
-        op run --env-file .env -- docker run ${=DOCKER_RUN_OPTS} ${=DOCKER_IMAGE} ansible-inventory $@
+        op run --env-file .env -- docker run ${DOCKER_RUN_OPTS} ${DOCKER_IMAGE} "$@"
     fi
 }
 
 function ansible-playbook() {
-    DOCKER_IMAGE=cytopia/ansible:${ANSIBLE_VERSION}
-    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD} -e SCW_ACCESS_KEY -e SCW_SECRET_KEY -e SCW_TOKEN -e ANSIBLE_CONFIG -v ${HOME}/.ssh:/root/.ssh"
-    if [ -n "$ZSH_VERSION"]; then
-        op run --env-file .env -- docker run ${DOCKER_RUN_OPTS} ${DOCKER_IMAGE} ansible-playbook $@
+    DOCKER_IMAGE=ansible
+    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD} -e SCW_ACCESS_KEY -e SCW_SECRET_KEY -e SCW_TOKEN -e ANSIBLE_CONFIG -v ${HOME}/.ssh:/root/.ssh --entrypoint=ansible-playbook"
+    if [ -n "$ZSH_VERSION" ]; then
+        op run --env-file .env -- docker run ${=DOCKER_RUN_OPTS} ${=DOCKER_IMAGE} "$@"
     else
-        op run --env-file .env -- docker run ${=DOCKER_RUN_OPTS} ${=DOCKER_IMAGE} ansible-playbook $@
+        op run --env-file .env -- docker run ${DOCKER_RUN_OPTS} ${DOCKER_IMAGE} "$@"
     fi
 }

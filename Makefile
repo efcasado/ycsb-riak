@@ -1,4 +1,4 @@
-.PHONY: all build up down load run cluster-info show-riak-config
+.PHONY: all build build-ycsb build-ansible up down load run cluster-info show-riak-config
 .PHONY: up-local up-remote down-local down-remote
 .PHONY: load-local load-remote run-local run-remote
 .PHONY: cluster-info-local cluster-info-remote show-riak-config-local show-riak-config-remote
@@ -23,8 +23,13 @@ endif
 
 all: | build up cluster-info load run
 
-build:
+build: | build-ycsb build-ansible
+
+build-ycsb:
 	docker build . -t ycsb
+
+build-ansible:
+	cd ansible; docker build . -t ansible
 
 up: up$(TARGET_SUFFIX)
 up-local:
@@ -61,21 +66,20 @@ load: load$(TARGET_SUFFIX)
 load-local:
 	YCSB_RIAK_HOSTS=$$(docker ps --format "{{.Names}}" | grep ycsb-riak-riak | xargs | tr ' ' ','); docker run --cpus=$(DOCKER_YCSB_CPUS) --rm -it --network=$(DOCKER_NETWORK) ycsb load riak -P workloads/workloada -threads $(YCSB_THREADS) -target $(YCSB_TARGET) -p recordcount=$(YCSB_RECORD_COUNT) -p riak.hosts=$${YCSB_RIAK_HOSTS} -p riak.debug=true
 load-remote:
-	docker run --cpus=$(DOCKER_YCSB_CPUS) --rm -it --network=default ycsb load riak -P workloads/workloada -threads $(YCSB_THREADS) -target $(YCSB_TARGET) -p recordcount=$(YCSB_RECORD_COUNT) -p riak.hosts=$$(cd ansible; ansible-inventory --list -i scaleway/inventory.yml all | grep -v INFO | jq '._meta."hostvars" | .[] | .public_ipv4' | xargs | tr ' ' ',') -p riak.debug=true
+	cd ansible; ansible -i scaleway/inventory.yml ycsb -m shell -a "/opt/ycsb/bin/ycsb load riak -P /opt/ycsb/workloads/workloada -threads $(YCSB_THREADS) -target $(YCSB_TARGET) -p recordcount=$(YCSB_RECORD_COUNT) -p riak.hosts=$$(ansible-inventory --list -i scaleway/inventory.yml riak | grep -v INFO | jq '._meta."hostvars" | .[] | select(.tags[] | contains("riak")) | .public_ipv4' | uniq | xargs | tr ' ' ',') -p riak.debug=true"
+
 
 run: run$(TARGET_SUFFIX)
 run-local:
 	YCSB_RIAK_HOSTS=$$(docker ps --format "{{.Names}}" | grep ycsb-riak-riak | xargs | tr ' ' ','); docker run --cpus=$(DOCKER_YCSB_CPUS) --rm -it --network=$(DOCKER_NETWORK) ycsb run riak -P workloads/workloada -threads $(YCSB_THREADS) -target $(YCSB_TARGET) -p recordcount=$(YCSB_RECORD_COUNT) -p operationcount=$(YCSB_OPERATION_COUNT) -p riak.hosts=$(YCSB_RIAK_HOSTS) -p riak.debug=true
 run-remote:
-	$(eval YCSB_RIAK_HOSTS=$(shell cd ansible; ansible-inventory --list -i scaleway/inventory.yml all | jq '._meta."hostvars" | .[] | .public_ipv4' | xargs | tr ' ' ','))
-	docker run --cpus=$(DOCKER_YCSB_CPUS) --rm -it --network=default ycsb load riak -P workloads/workloada -threads $(YCSB_THREADS) -target $(YCSB_TARGET) -p recordcount=$(YCSB_RECORD_COUNT) -p operationcount=$(YCSB_OPERATION_COUNT) -p riak.hosts=$(YCSB_RIAK_HOSTS) -p riak.debug=true
+	cd ansible; ansible -i scaleway/inventory.yml ycsb -m shell -a "/opt/ycsb/bin/ycsb run riak -P /opt/ycsb/workloads/workloada -threads $(YCSB_THREADS) -target $(YCSB_TARGET) -p recordcount=$(YCSB_RECORD_COUNT) -p riak.hosts=$$(ansible-inventory --list -i scaleway/inventory.yml riak | grep -v INFO | jq '._meta."hostvars" | .[] | select(.tags[] | contains("riak")) | .public_ipv4' | uniq | xargs | tr ' ' ',') -p riak.debug=true"
 
 cluster-info: cluster-info$(TARGET_SUFFIX)
 cluster-info-local:
 	$(eval RIAK_INSTANCES := $(shell seq 1 1 $(RIAK_INSTANCES)))
 	docker-compose exec --index=1 -- riak riak-admin cluster status
 	-@RIAK_INSTANCES=($(RIAK_INSTANCES));for RIAK_INSTANCE in $${RIAK_INSTANCES[@]}; do \
-		echo "XXX=$$RIAK_INSTANCE" ;\
 		docker-compose exec --index=$$RIAK_INSTANCE -- riak riak-admin cluster partitions ;\
 	done
 cluster-info-remote:

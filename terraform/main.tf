@@ -75,7 +75,7 @@ resource "scaleway_instance_server" "riak" {
   count = var.instance_count
 
   project_id = var.project_id
-  type       = "DEV1-L"
+  type       = "GP1-M"
   image      = "ubuntu_focal"
 
   tags = ["riak", "riak${count.index + 1}"]
