@@ -1,11 +1,16 @@
-## == Terraform ================================================================
 TERRAFORM_VERSION=1.1.8
+
 function terraform() {
     DOCKER_IMAGE=hashicorp/terraform:${TERRAFORM_VERSION}
-    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD} -e SCW_ACCESS_KEY -e SCW_SECRET_KEY -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e GODADDY_API_KEY -e GODADDY_API_SECRET -e TF_VAR_project_id"
+    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD}"
+
+    if [ -f ".env" ]; then
+        DOCKER_RUN_OPTS_EXTRA=$(cat .env | sed -nE 's/^([^#]+)=.*/-e \1/p' | xargs)
+    fi
+
     if [ -n "$ZSH_VERSION" ]; then
-        op run --env-file .env -- docker run ${=DOCKER_RUN_OPTS} ${=DOCKER_IMAGE} $@
+        op run --env-file .env -- docker run ${=DOCKER_RUN_OPTS} ${=DOCKER_RUN_OPTS_EXTRA} ${=DOCKER_IMAGE} "$@"
     else
-        op run --env-file .env -- docker run ${DOCKER_RUN_OPTS} ${DOCKER_IMAGE} $@
+        op run --env-file .env -- docker run ${DOCKER_RUN_OPTS} ${DOCKER_RUN_OPTS_EXTRA} ${DOCKER_IMAGE} "$@"
     fi
 }

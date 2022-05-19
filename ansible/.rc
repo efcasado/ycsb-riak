@@ -1,40 +1,60 @@
 ## == Ansible ================================================================
 function ansible() {
     DOCKER_IMAGE=ansible
-    DOCKER_RUN_OPTS="--rm -it -v ${HOME}/.ssh:/root/.ssh -v ${PWD}:${PWD} -w ${PWD} -e SCW_ACCESS_KEY -e SCW_SECRET_KEY -e SCW_TOKEN -e ANSIBLE_CONFIG -v ${HOME}/.ssh:/root/.ssh --entrypoint=ansible"
+    DOCKER_RUN_OPTS="--rm -it -v ${HOME}/.ssh:/root/.ssh -v ${PWD}:${PWD} -w ${PWD} -v ${HOME}/.ssh:/root/.ssh --entrypoint=ansible"
+
+    if [ -f ".env" ]; then
+        DOCKER_RUN_OPTS_EXTRA=$(cat .env | sed -nE 's/^([^#]+)=.*/-e \1/p' | xargs)
+    fi
+
     if [ -n "$ZSH_VERSION" ]; then
-        op run --env-file .env -- docker run ${=DOCKER_RUN_OPTS} ${=DOCKER_IMAGE} "$@"
+        op run --env-file .env -- docker run ${=DOCKER_RUN_OPTS} ${=DOCKER_RUN_OPTS_EXTRA} ${=DOCKER_IMAGE} "$@"
     else
-        op run --env-file .env -- docker run ${DOCKER_RUN_OPTS} ${DOCKER_IMAGE} "$@"
+        op run --env-file .env -- docker run ${DOCKER_RUN_OPTS} ${DOCKER_RUN_OPTS_EXTRA} ${DOCKER_IMAGE} "$@"
     fi
 }
 
 function ansible-galaxy() {
     DOCKER_IMAGE=ansible
-    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD} -e SCW_ACCESS_KEY -e SCW_SECRET_KEY -e SCW_TOKEN -e ANSIBLE_CONFIG -v ${HOME}/.ssh:/root/.ssh --entrypoint=ansible-galaxy"
+    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD} -v ${HOME}/.ssh:/root/.ssh --entrypoint=ansible-galaxy"
+
+    if [ -f ".env" ]; then
+        DOCKER_RUN_OPTS_EXTRA=$(cat .env | sed -nE 's/^([^#]+)=.*/-e \1/p' | xargs)
+    fi
+
     if [ -n "$ZSH_VERSION" ]; then
-        op run --env-file .env -- docker run ${=DOCKER_RUN_OPTS} ${=DOCKER_IMAGE} "$@"
+        op run --env-file .env -- docker run ${=DOCKER_RUN_OPTS} ${=DOCKER_RUN_OPTS_EXTRA} ${=DOCKER_IMAGE} "$@"
     else
-        op run --env-file .env -- docker run ${DOCKER_RUN_OPTS} ${DOCKER_IMAGE} "$@"
+        op run --env-file .env -- docker run ${DOCKER_RUN_OPTS} ${DOCKER_RUN_OPTS_EXTRA} ${DOCKER_IMAGE} "$@"
     fi
 }
 
 function ansible-inventory() {
     DOCKER_IMAGE=ansible
-    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD} -e SCW_ACCESS_KEY -e SCW_SECRET_KEY -e SCW_TOKEN -e ANSIBLE_CONFIG -v ${HOME}/.ssh:/root/.ssh --entrypoint=ansible-inventory"
+    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD} -v ${HOME}/.ssh:/root/.ssh --entrypoint=ansible-inventory"
+
+    if [ -f ".env" ]; then
+        DOCKER_RUN_OPTS_EXTRA=$(cat .env | sed -nE 's/^([^#]+)=.*/-e \1/p' | xargs)
+    fi
+
     if [ -n "$ZSH_VERSION" ]; then
-        op run --env-file .env -- docker run ${=DOCKER_RUN_OPTS} ${=DOCKER_IMAGE} "$@"
+        op run --env-file .env -- docker run ${=DOCKER_RUN_OPTS} ${=DOCKER_RUN_OPTS_EXTRA} ${=DOCKER_IMAGE} "$@"
     else
-        op run --env-file .env -- docker run ${DOCKER_RUN_OPTS} ${DOCKER_IMAGE} "$@"
+        op run --env-file .env -- docker run ${DOCKER_RUN_OPTS} ${DOCKER_RUN_OPTS_EXTRA} ${DOCKER_IMAGE} "$@"
     fi
 }
 
 function ansible-playbook() {
     DOCKER_IMAGE=ansible
-    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD} -e SCW_ACCESS_KEY -e SCW_SECRET_KEY -e SCW_TOKEN -e ANSIBLE_CONFIG -v ${HOME}/.ssh:/root/.ssh --entrypoint=ansible-playbook"
+    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD} -v ${HOME}/.ssh:/root/.ssh --entrypoint=ansible-playbook"
+
+    if [ -f ".env" ]; then
+        DOCKER_RUN_OPTS_EXTRA=$(cat .env | sed -nE 's/^([^#]+)=.*/-e \1/p' | xargs)
+    fi
+
     if [ -n "$ZSH_VERSION" ]; then
-        op run --env-file .env -- docker run ${=DOCKER_RUN_OPTS} ${=DOCKER_IMAGE} "$@"
+        op run --env-file .env -- docker run ${=DOCKER_RUN_OPTS} ${=DOCKER_RUN_OPTS_EXTRA} ${=DOCKER_IMAGE} "$@"
     else
-        op run --env-file .env -- docker run ${DOCKER_RUN_OPTS} ${DOCKER_IMAGE} "$@"
+        op run --env-file .env -- docker run ${DOCKER_RUN_OPTS} ${DOCKER_RUN_OPTS_EXTRA} ${DOCKER_IMAGE} "$@"
     fi
 }
