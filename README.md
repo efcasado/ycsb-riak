@@ -57,3 +57,19 @@ database and executing `10_000` operations against the loaded data.
 It is also possible to configure how many CPUs will be allocated to `YCSB` and
 each of the `Riak` containers. You can do this by adjusting the `DOCKER_YCSB_CPUS`
 and `DOCKER_RIAK_CPUS` variables, which default to `1`.
+
+
+## Results
+
+```
+CLOUD_PROVIDER=aws USE_DOCKER=0 YCSB_THREADS=128 YCSB_TARGET=40000 YCSB_RECORD_COUNT=300000 YCSB_OPERATION_COUNT=300000 make load
+```
+
+| Cloud Provider | Instance Type | Cluster Size | Riak Version | Ring Size | Throughput |
+|:--------------:|:-------------:|:------------:|:------------:|:---------:|:----------:|
+| `aws`          | `c5.2xlarge`  | `7`          | `2.9.10`     | `16`      | `16,491`   |
+| `aws`          | `c5.2xlarge`  | `7`          | `2.9.10`     | `64`      | `21,466`   |
+| `aws`          | `c5.2xlarge`  | `7`          | `2.9.10`     | `128`     | `22,202`   |
+| `aws`          | `c5.2xlarge`  | `7`          | `3.0.9`      | `16`      | ``   |
+| `aws`          | `c5.2xlarge`  | `7`          | `3.0.9`      | `64`      | ``   |
+| `aws`          | `c5.2xlarge`  | `7`          | `3.0.9`      | `128`     | ``   |
