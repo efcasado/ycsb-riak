@@ -1,7 +1,7 @@
 ## == Ansible ================================================================
 function ansible() {
     DOCKER_IMAGE=ansible
-    DOCKER_RUN_OPTS="--rm -it -v ${HOME}/.ssh:/root/.ssh -v ${PWD}:${PWD} -w ${PWD} -v ${HOME}/.ssh:/root/.ssh --entrypoint=ansible"
+    DOCKER_RUN_OPTS="--rm -it -v ${HOME}/.ssh:/root/.ssh -v ${PWD}:${PWD} -w ${PWD} -v ${HOME}/.ssh:/root/.ssh -v ${PWD}/.ansible:/root/.ansible --entrypoint=ansible"
 
     if [ -f ".env" ]; then
         DOCKER_RUN_OPTS_EXTRA=$(cat .env | sed -nE 's/^([^#]+)=.*/-e \1/p' | xargs)
@@ -16,7 +16,7 @@ function ansible() {
 
 function ansible-galaxy() {
     DOCKER_IMAGE=ansible
-    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD} -v ${HOME}/.ssh:/root/.ssh --entrypoint=ansible-galaxy"
+    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD} -v ${HOME}/.ssh:/root/.ssh -v ${PWD}/.ansible:/root/.ansible --entrypoint=ansible-galaxy"
 
     if [ -f ".env" ]; then
         DOCKER_RUN_OPTS_EXTRA=$(cat .env | sed -nE 's/^([^#]+)=.*/-e \1/p' | xargs)
@@ -31,7 +31,7 @@ function ansible-galaxy() {
 
 function ansible-inventory() {
     DOCKER_IMAGE=ansible
-    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD} -v ${HOME}/.ssh:/root/.ssh --entrypoint=ansible-inventory"
+    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD} -v ${HOME}/.ssh:/root/.ssh -v ${PWD}/.ansible:/root/.ansible --entrypoint=ansible-inventory"
 
     if [ -f ".env" ]; then
         DOCKER_RUN_OPTS_EXTRA=$(cat .env | sed -nE 's/^([^#]+)=.*/-e \1/p' | xargs)
@@ -46,7 +46,7 @@ function ansible-inventory() {
 
 function ansible-playbook() {
     DOCKER_IMAGE=ansible
-    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD} -v ${HOME}/.ssh:/root/.ssh --entrypoint=ansible-playbook"
+    DOCKER_RUN_OPTS="--rm -it -v ${PWD}:${PWD} -w ${PWD} -v ${HOME}/.ssh:/root/.ssh -v ${PWD}/.ansible:/root/.ansible --entrypoint=ansible-playbook"
 
     if [ -f ".env" ]; then
         DOCKER_RUN_OPTS_EXTRA=$(cat .env | sed -nE 's/^([^#]+)=.*/-e \1/p' | xargs)

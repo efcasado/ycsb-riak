@@ -1,6 +1,7 @@
 ---
 - name: Install and configure Riak
   hosts: riak
+  become: true
 
   tasks:
     - name: Download Riak
