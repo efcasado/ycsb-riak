@@ -17,11 +17,14 @@
     - name: Join the cluster
       shell: riak-admin cluster join riak@{{ groups['riak1'][0] }}
       when: ansible_host != groups['riak1'][0]
+      ignore_errors: yes
 
     - name: Plan the cluster changes
       shell: riak-admin cluster plan
       when: ansible_host != groups['riak1'][0]
+      ignore_errors: yes
 
     - name: Commit the cluster changes
       shell: riak-admin cluster commit
       when: ansible_host != groups['riak1'][0]
+      ignore_errors: yes

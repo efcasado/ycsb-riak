@@ -17,9 +17,19 @@
         update_cache: yes
 
     - name: Download YCSB
-      shell: |
-        wget https://github.com/brianfrankcooper/YCSB/releases/download/{{ ycsb_version }}/ycsb-{{ ycsb_version }}.tar.gz -P /tmp/
-        mkdir -p /opt/ycsb
-        tar xfvz /tmp/ycsb-{{ ycsb_version }}.tar.gz --strip-components=1 -C /opt/ycsb/
-        cd /opt/ycsb
-        rm -rf /tmp/ycsb-{{ ycsb_version }}
+      get_url:
+        url: https://github.com/brianfrankcooper/YCSB/releases/download/{{ ycsb_version }}/ycsb-{{ ycsb_version }}.tar.gz
+        dest: /tmp/ycsb-{{ ycsb_version }}.tar.gz
+
+    - name: Create /opt/ycsb directory if it does not exist
+      ansible.builtin.file:
+        path: /opt/ycsb
+        state: directory
+
+    - name: Extract YCSB into /opt/ycsb/
+      ansible.builtin.unarchive:
+        remote_src: yes
+        src: /tmp/ycsb-{{ ycsb_version }}.tar.gz
+        dest: /opt/ycsb
+        extra_opts:
+        - --strip-components=1
