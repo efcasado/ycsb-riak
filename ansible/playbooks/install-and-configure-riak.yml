@@ -4,14 +4,19 @@
   become: true
 
   tasks:
+    - set_fact:
+        riak_version_xyz: "{{ riak_version | regex_replace('^([0-9]+)\\.([0-9]+)\\.([0-9]+).*$', '\\1.\\2.\\3') }}"
+    - set_fact:
+        riak_version_xy: "{{ riak_version | regex_replace('^([0-9]+)\\.([0-9]+)\\.([0-9]+).*$', '\\1.\\2') }}"
+
     - name: Download Riak
       get_url:
-        url: https://files.tiot.jp/riak/kv/{{ riak_version_minor }}/{{ riak_version }}/ubuntu/focal64/riak_{{ riak_version }}-1_amd64.deb
-        dest: /tmp/riak_{{ riak_version }}-1_amd64.deb
+        url: https://files.tiot.jp/riak/kv/{{ riak_version_xy }}/{{ riak_version_xyz }}/ubuntu/focal64/riak_{{ riak_version }}_amd64.deb
+        dest: /tmp/riak_{{ riak_version }}_amd64.deb
 
     - name: Install Riak
       apt:
-        deb: /tmp/riak_{{ riak_version }}-1_amd64.deb
+        deb: /tmp/riak_{{ riak_version }}_amd64.deb
         state: present
 
     - name: Configure node name
@@ -84,16 +89,50 @@
         - Re-initialize Riak
         - Start Riak
 
-    - name: Configure ulimit
+    - name: Disable Riak Control
+      replace:
+        path: /etc/riak/riak.conf
+        regexp: '^riak_control(.*)'
+        replace: '#riak_control\1'
+
+    - name: Configure ulimit (soft) in /etc/security/limits.conf
+      lineinfile:
+        path: /etc/security/limits.conf
+        line: "riak soft nofile 65536"
+        regexp: "^riak soft nofile"
+        create: yes
+      notify:
+        - Stop Riak
+        - Re-initialize Riak
+        - Start Riak
+    - name: Configure ulimit (hard) in /etc/security/limits.conf
+      lineinfile:
+        path: /etc/security/limits.conf
+        line: "riak hard nofile 262144"
+        regexp: "^riak hard nofile"
+        create: yes
+      notify:
+        - Stop Riak
+        - Re-initialize Riak
+        - Start Riak
+
+    - name: Configure ulimit in /etc/default/riak
       lineinfile:
         path: /etc/default/riak
-        line: "ulimit -n 200000"
+        line: "ulimit -n 262144"
         regexp: "^ulimit -n"
         create: yes
       notify:
         - Stop Riak
         - Re-initialize Riak
         - Start Riak
+
+    - name: Configure ulimit in /lib/systemd/system/riak.service
+      community.general.ini_file:
+        path: /lib/systemd/system/riak.service
+        section: Service
+        option: LimitNOFILE
+        value: infinity
 
     - name: Ensure Riak is running
       ansible.builtin.service:
